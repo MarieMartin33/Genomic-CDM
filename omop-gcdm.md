@@ -137,6 +137,25 @@ condition_occurrence {
   varchar(50) condition_status_source_value "NULL, condition_status_source_value"
 }
 
+%% note "cohort table, FROM OMOP CDM"
+cohort {
+  integer cohort_definition_id "NOT NULL, cohort_definition_id"
+  integer subject_id "NOT NULL, subject_id"
+  date cohort_start_date "NOT NULL, cohort_start_date"
+  date cohort_end_date "NOT NULL, cohort_end_date"
+}
+
+%% note "cohort_definition table, FROM OMOP CDM"
+cohort_definition {
+  integer cohort_definition_id "NOT NULL, cohort_definition_id"
+  varchar(255) cohort_definition_name "NOT NULL, cohort_definition_name"
+  text cohort_definition_description "NULL, cohort_definition_description"
+  integer definition_type_concept_id "NOT NULL, definition_type_concept_id"
+  text cohort_definition_syntax "NULL, cohort_definition_syntax"
+  integer subject_concept_id "NOT NULL, subject_concept_id"
+  date cohort_initiation_date "NULL, cohort_initiation_date"
+}
+
 %% note "genomic_test table, FROM OMOP G-CDM"
 genomic_test{
   integer genomic_test_id PK "NOT NULL, A unique identifier for each platform"
@@ -228,6 +247,8 @@ concept ||--o{ concept_class : "concept.concept_id concept_class.concept_class_c
 
 fact_relationship ||--o{ procedure_occurrence : "fact_relationship.fact_id_1 procedure_occurrence.procedure_occurrence_id"
 fact_relationship ||--o{ specimen : "fact_relationship.fact_id_2 specimen.specimen_id"
+concept ||--o{ cohort_definition : "concept.concept_id cohort_definition.definition_type_concept_id" 
+concept ||--o{ cohort_definition : "concept.concept_id cohort_definition.subject_concept_id"
 
 genomic_test ||--o{ target_gene : "genomic_test.genomic_test_id target_gene.genomic_test_id"
 target_gene ||--o{ variant_occurrence : "target_gene.target_gene_id variant_occurrence.target_gene1_id"
@@ -247,4 +268,6 @@ genomic_test ||--o{ concept : "genomic_test.reference_genome_concept_id concept.
 genomic_test ||--o{ concept : "genomic_test.read_type_concept_id concept.concept_id"
 genomic_test ||--o{ concept : "genomic_test.chromosome_coordinate_concept_id concept.concept_id"
 
+cohort ||--|| cohort_definition : "cohort.cohort_definition_id cohort_definition.cohort_definition_id" 
+cohort_definition ||--o{ person : "cohort_definition.subject_concept_id person.person_id" 
 ```
