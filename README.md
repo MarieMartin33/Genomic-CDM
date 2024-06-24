@@ -1,15 +1,28 @@
 # Genomic-CDM
-Welcome to Genomic Common Data Model (G-CDM) ! 
-This repository houses table specifications and related documents of G-CDM for the latest version as well as changes.
-This is a prototype of the Genomic CDM that is on developing, so please use it for reference purpose.
+ 
+This repository houses table specifications and related documents of Genomic Common Data Model (G-CDM).
+This is a fork of [OHDSI G-CDM](https://github.com/OHDSI/Genomic-CDM), an original proposal from  Seojeong Shin and Christian Reich, not maintained till 5 years to the knowledge of the author of these lines.
+
+This is still a prototype of the Genomic CDM that is on developing, so please use it for reference purpose.
 
 [Original Entity-Relationship Diagram](ERD.png) was not up to date with content below and is not up to date with CDM 5.4 but gives some clues regarding this effort.
 
-Current [G-CDM Entity-Relationship Diagram](omop-gcdm.md) is up to date with the original G-CDM wiki content and the OMOP CDM 5.4.
+Current [G-CDM Entity-Relationship Diagram](omop-gcdm.md) is up to date with the following content and the OMOP CDM 5.4.
 
-Browse Git push history to retrieve older versions and check differences.
+Mermaid cardinalites of each links have not beee worked (0..* is kept as default to create a visual link only).
 
 See [FHIR Genomics](https://build.fhir.org/ig/HL7/genomics-reporting/sequencing.html) for consistent parallel modeling.
+
+VARIANT_OCCURRENCE table is flattening some common variant attributes pretty surely to avoid to much jointures.
+
+Vocabularies are listed at the end. Like FHIR Genomics, idea will be to avoid pre-coordination.
+Idea here will be to use [Athena tooling](https://athena.ohdsi.org/search-terms/start) and to make an effort to use more concept encoded fields as there are to much free text in the v2.0.
+
+COHORT and COHORT_DEFINTION are reproducted here from CDM 5.4 as multi-patient VCF files (1000Genom, 3000+ patients for exemple) may be modeled using these tables and then [Atlas tooling](https://atlas-demo.ohdsi.org/) could be plugged.
+
+Then [DataQualityDashboard tooling](https://github.com/OHDSI/DataQualityDashboard) may be adapted to genomics.
+
+Browse Git push history to retrieve older versions and check differences.
 
 **_Genomic-CDM (G-CDM) v3.0 Specifications_**
 
@@ -110,3 +123,20 @@ Concept table should be provisionned with concepts linked to these concept_class
 | alt-allele (LOINC 69551-0)                        | If the reference allele is tested and found unchanged, this string should be equal to the REF allele string. |
 
 
+# Vocabularies
+
+Vocabularies to be created / imported / injected in Concepts' tables:
+
+| Vocabulary | Note |
+| ------------------ | ---- |
+| HGNC | ---- |
+| HGVS_A | ---- |
+| HGVS_P | ---- |
+| dbSNP  | reference ID (rsID) maintained by NCBI |
+| genetic_origin  | ---- |
+| genotype  | ---- |
+| reference_genome  | ---- |
+| read_type  | ---- |
+| chromosome_coordinate  | ---- |
+| variant_annotation  | ---- |
+| reference_sequence  | ---- |
