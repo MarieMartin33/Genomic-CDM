@@ -9,6 +9,8 @@ Current [G-CDM Entity-Relationship Diagram](omop-gcdm.md) is up to date with the
 
 Browse Git push history to retrieve older versions and check differences.
 
+See [FHIR Genomics](https://build.fhir.org/ig/HL7/genomics-reporting/sequencing.html) for consistent parallel modeling.
+
 **_Genomic-CDM (G-CDM) v2.0 Specifications_**
 
 # Contents
@@ -21,11 +23,11 @@ Browse Git push history to retrieve older versions and check differences.
 | care_site_id               | Yes      | integer      | A foreign key to the site of primary care in the care_site table, where the details of the care site are stored |
 | genomic_test_name          | No       | varchar(255) | Information about the name of platform using sequencing assigned by institution                                 |
 | genomic_test_version       | No       | varchar(50)  | Information about the name of platform using sequencing maintained by institution                               |
-| reference_genome           | No       | varchar(50)  | Information about the Reference genome used to sequencing analysis                                              |
+| reference_genome_concept_id           | No       | integer  | Information about the Reference genome used to sequencing analysis                                              |
 | sequencing_device          | No       | varchar(50)  | Sequencer machine information                                                                                   |
 | library_preparation        | No       | varchar(50)  | Information about the preparation method for the sequencing library                                             |
 | target_capture             | No       | varchar(50)  | Information about the capture method of examined and targeted region                                            |
-| read_type                  | No       | varchar(50)  | Information about the method of sequence reading                                                                |
+| read_type_concept_id                  | No       | integer  | Information about the method of sequence reading                                                                |
 | read_length                | No       | integer      | Information about the length of read                                                                            |
 | quality_control_tools      | No       | varchar(255) | Information about the tool used to control quality                                                              |
 | total_reads                | No       | integer      | Total count of reads involved in assembly                                                                       |
@@ -33,7 +35,7 @@ Browse Git push history to retrieve older versions and check differences.
 | per_target_base_cover_100x | No       | float        | Percentage of selected bases                                                                                    |
 | alignment_tools            | No       | varchar(255) | Information about the name and version of the alignment tool                                                    |
 | variant_calling_tools      | No       | varchar(255) | Information about the name and version of variant calling tool                                                  |
-| chromosome_corrdinate      | No       | varchar(255) | Coordinated system for numbering the chromosomes                                                                |
+| chromosome_coordinate_concept_id      | No       | integer | Coordinated system for numbering the chromosomes                                                                |
 | annotation_tools           | No       | varchar(255) | Information about the tool used for annotation                                                                  |
 | annotation_databases       | No       | varchar(255) | Information about the database for annotation                                                                   |
 
@@ -43,8 +45,7 @@ Browse Git push history to retrieve older versions and check differences.
 | --------------- | -------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | target_gene_id  | Yes      | integer     | A system-generated unique identifier for each target region                                                                               |
 | genomic_test_id | Yes      | integer     | A foreign key identifier to the platform containing the target region. The details of that platform are stored in the Platform_info table |
-| hgnc_id         | Yes      | varchar(50) | Gene ID based on HGNC nomenclature                                                                                                        |
-| hgnc_symbol     | Yes      | varchar(50) | Gene Symbol given by HGNC nomenclature                                                                                                    |
+| gene_concept_id         | Yes      | integer | Gene ID, mainly based on HGNC nomenclature                                                                                                        |
 
 ## VARIANT_OCCURRENCE
 
@@ -58,12 +59,12 @@ Browse Git push history to retrieve older versions and check differences.
 | target_gene1_symbol     | No       | varchar(255) | A symbol of gene where the variant information is recorded                                                                          |
 | target_gene2_id         | No       | varchar(50)  | A foreign key identifier to the Target_gene table for which the variant information is recorded when a translocation variant occurs |
 | target_gene2_symbol     | No       | varchar(255) | A symbol of gene where the variant information is recorded                                                                          |
-| reference_sequence      | No       | varchar(50)  | Transcript ID based on a protein-coding RNA (mRNA) made up of the accession number and version number                               |
-| rs_id                   | No       | varchar(50)  | dbSNP reference ID (rsID) maintained by NCBI                                                                                        |
+| reference_sequence_concept_id      | No       | integer  | Transcript ID based on a protein-coding RNA (mRNA) made up of the accession number and version number                               |
+| rs_concept_id                   | No       | integer  | dbSNP reference ID (rsID) maintained by NCBI                                                                                        |
 | reference_allele        | No       | varchar(255) | Reference allele sequence (e.g., A)                                                                                                 |
 | alternate_allele        | No       | varchar(255) | Variant allele sequence (e.g., C)                                                                                                   |
-| hgvs_c                  | No       | varchar(MAX) | Nomenclature for the sequence variant at the DNA level                                                                              |
-| hgvs_p                  | No       | varchar(MAX) | Nomenclature for the sequence variant at the protein level                                                                          |
+| dnalevel_concept_id                  | No       | integer | Nomenclature for the sequence variant at the DNA level                                                                              |
+| proteinlevel_concept_id                  | No       | integer | Nomenclature for the sequence variant at the protein level                                                                          |
 | variant_read_depth      | No       | integer      | Variant depth divided by read depth                                                                                                 |
 | variant_exon_number     | No       | integer      | Exon number in which the variant occurred                                                                                           |
 | copy_number             | No       | float        | Copy number value for CNV data                                                                                                      |
@@ -72,8 +73,8 @@ Browse Git push history to retrieve older versions and check differences.
 | fusion_supporting_reads | No       | integer      | Supporting read count of the fusion                                                                                                 |
 | sequence_alteration     | No       | varchar(MAX) | Structural variant type                                                                                                             |
 | variant_feature         | No       | varchar(MAX) | Functional variant type                                                                                                             |
-| genetic origin          | No       | varchar(50)  | Somatic or germline origin or the variant                                                                                           |
-| genotype                | No       | varchar(50)  | Allele state                                                                                                                        |
+| genetic_origin_concept_id          | No       | integer  | Somatic or germline origin or the variant                                                                                           |
+| genotype_concept_id                | No       | integer  | Allele state                                                                                                                        |
 
 ## VARIANT_ANNOTATION
 
@@ -81,6 +82,31 @@ Browse Git push history to retrieve older versions and check differences.
 | --------------------- | -------- | ------------ | ----------------------------------------------------------------------------------------------------- |
 | variant_annotation_id | Yes      | integer      | A unique identifier for each variant annotation event                                                 |
 | variant_occurrence_id | Yes      | integer      | A foreign key identifier to the variant_occurrence table for which the variant annotation is recorded |
-| annotation_field       | Yes      | varchar(MAX) | Categories or database name of annotation                                                             |
+| annotation_concept_id       | Yes      | integer | Categories or database name of annotation                                                             |
 | value_as_string       | No       | varchar(MAX) | Annotation value as a data type of string                                                             |
 | value_as_number       | No       | float        | ANnotation value as a data type of number 
+
+
+
+# Concept and Concept_class
+
+Concept table should be provisionned with concepts linked to these concept_class when appropriate (see FHIR Genomics):
+
+
+| Defining Component | Note |
+| ------------------ | ---- |
+| genomic-hgvs (LOINC 81290-9) OR representative-coding-hgvs (LOINC 48004-6) | [Proper usage of HGVS contains the reference sequence identifier followed by ‘:g.’ for genomic or ‘:c.’ for a coding sequence. In HGVS notation, the “=” (equals) is used to indicate a sequence was tested but found unchanged [ref].](https://varnomen.hgvs.org/recommendations/general/) |
+| cyogenomic-nomenclature (LOINC 81291-7) | more information on formatting structural variations below.|
+
+
+
+| Defining Component | Note |
+| ------------------ | ---- |
+| genomic-ref-seq (LOINC 48013-7)                   | must send at least this or representative transcript refseq |
+| representative-transcript-ref-seq (LOINC 51958-7) | must send at least this or genomic refseq                                                                    |
+| coordinate-system (LOINC 92822-6)                 | Common coordinate systems are described by LOINC.                                                            |
+| exact-start-end (LOINC 81254-5)                   | Interpretation of this number requires the reference sequence and coordinate system.                         |
+| ref-allele (LOINC 69547-8)                        | This string should be normalized per the VCF standard.                                                       |
+| alt-allele (LOINC 69551-0)                        | If the reference allele is tested and found unchanged, this string should be equal to the REF allele string. |
+
+

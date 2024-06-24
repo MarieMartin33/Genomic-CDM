@@ -76,6 +76,27 @@ specimen {
   varchar(50) disease_status_source_value "NULL, disease_status_source_value"
 }
 
+%% note "concept table, FROM OMOP CDM"
+concept {
+  integer concept_id "NOT NULL, concept_id"
+  varchar(255) concept_name "NOT NULL, concept_name"
+  varchar(20) domain_id "NOT NULL, domain_id"
+  varchar(20) vocabulary_id "NOT NULL, vocabulary_id"
+  varchar(20) concept_class_id "NOT NULL, concept_class_id"
+  varchar(1) standard_concept "NULL, standard_concept"
+  varchar(50) concept_code "NOT NULL, concept_code"
+  date valid_start_date "NOT NULL, valid_start_date"
+  date valid_end_date "NOT NULL, valid_end_date"
+  varchar(1) invalid_reason "NULL, invalid_reason"
+}
+
+%% note "concept_class table, FROM OMOP CDM"
+concept_class {
+  varchar(20) concept_class_id "NOT NULL, concept_class_id"
+  varchar(255) concept_class_name "NOT NULL, concept_class_name"
+  integer concept_class_concept_id "NOT NULL, concept_class_concept_id"
+}
+
 %% note "procedure_occurrence table,FROM OMOP CDM"
 procedure_occurrence {
   integer procedure_occurrence_id PK "NOT NULL, procedure_occurrence_id"
@@ -122,11 +143,11 @@ genomic_test{
   integer care_site_id  FK "NOT NULL, A foreign key to the site of primary care in the care_site table, where the details of the care site are stored"
   varchar(255) genomic_test_name "NULL, Information about the name of platform using sequencing assigned by institution"
   varchar(50) genomic_test_version "NULL, Information about the name of platform using sequencing maintained by institution"
-  varchar(50) reference_genome "NULL, Information about the Reference genome used to sequencing analysis"
+  integer reference_genome_concept_id "NULL, Information about the Reference genome used to sequencing analysis, ex. GRCh38"
   varchar(50) sequencing_device "NULL, Sequencer machine information"
   varchar(50) library_preparation "NULL, Information about the preparation method for the sequencing library"
   varchar(50) target_capture "NULL, Information about the capture method of examined and targeted region"
-  varchar(50) read_type "NULL, Information about the method of sequence reading"
+  integer read_type_concept_id "NULL, Information about the method of sequence reading, ex. Paired-end"
   integer read_length "NULL, Information about the length of read"
   varchar(255) quality_control_tools "NULL, Information about the tool used to control quality"
   integer total_reads "NULL, Total count of reads involved in assembly"
@@ -134,17 +155,21 @@ genomic_test{
   float per_target_base_cover_100x "NULL Percentage of selected bases"
   varchar(255) alignment_tools "NULL, Information about the name and version of the alignment tool"
   varchar(255) variant_calling_tools "NULL, Information about the name and version of variant calling tool"
-  varchar(255) chromosome_corrdinate "NULL, Coordinated system for numbering the chromosomes"
+  integer chromosome_coordinate_concept_id "NULL, Coordinated system for numbering the chromosomes, ex. O-Based"
   varchar(255) annotation_tools "NULL, Information about the tool used for annotation"
   varchar(255) annotation_databases "NULL, Information about the database for annotation"
 }
+
+reference_genome_concept_id
+read_type_concept_id
+chromosome_coordinate_concept_id
 
 %% note "target_gene table, FROM OMOP G-CDM"
 target_gene{
   integer target_gene_id PK "NOT NULL, A system-generated unique identifier for each target region"
   integer genomic_test_id FK "NOT NULL, A foreign key identifier to the platform containing the target region. The details of that platform are stored in the Platform_info table"
-  varchar(50) hgnc_id "NOT NULL, Gene ID based on HGNC nomenclature"
-  varchar(50) hgnc_symbol	"NOT NULL, Gene Symbol given by HGNC nomenclature"
+  integer gene_concept_id "NOT NULL, Gene ID, mainly based on HGNC nomenclature"
+  %%varchar(50) hgnc_symbol	"NOT NULL, Gene Symbol given by HGNC nomenclature"
   %%varchar(50) chromosome_id "NOT NULL, Chromosome ID"
   %%integer start_position "NOT NULL, start position"
   %%integer end_position "NOT NULL, end position"
@@ -156,16 +181,14 @@ variant_occurrence{
   integer procedure_occurrence_id FK "NOT NULL, A foreign key identifier to the Procedure_occurrence table for the procedure used to obtain the specimen"
   integer specimen_id FK "NOT NULL, Tumor specimen ID"
   integer reference_specimen_id FK "NULL, ID of the normal specimen related to the tumor specimen"
-  varchar(50) target_gene1_id FK "NULL, A foreign key identifier to the Target_gene table for which the variant information is recorded"
-  varchar(255) target_gene1_symbol "NULL, A symbol of gene where the variant information is recorded"
-  varchar(50) target_gene2_id FK "NULL, A foreign key identifier to the Target_gene table for which the variant information is recorded when a translocation variant occurs"
-  varchar(255) target_gene2_symbol "NULL, A symbol of gene where the variant information is recorded"
-  varchar(50) reference_sequence "NULL, Transcript ID based on a protein-coding RNA (mRNA) made up of the accession number and version number"
-  varchar(50) rs_id "NULL, dbSNP reference ID (rsID) maintained by NCBI"
+  integer target_gene1_id FK "NULL, A foreign key identifier to the Target_gene table for which the variant information is recorded"
+  integer target_gene2_id FK "NULL, A foreign key identifier to the Target_gene table for which the variant information is recorded when a translocation variant occurs"
+  integer reference_sequence_concept_id "NULL, Transcript ID based on a protein-coding RNA (mRNA) made up of the accession number and version number"
+  integer rs_concept_id "NULL, dbSNP reference ID (rsID) maintained by NCBI"
   varchar(255) reference_allele "NULL, Reference allele sequence (e.g., A)"
   varchar(255) alternate_allele "NULL, Variant allele sequence (e.g., C)"
-  varchar(MAX) hgvs_c "NULL, Nomenclature for the sequence variant at the DNA level"
-  varchar(MAX) hgvs_p "NULL, Nomenclature for the sequence variant at the protein level"
+  integer dnalevel_concept_id "NULL, Nomenclature for the sequence variant at the DNA level (HGVS_C)"
+  integer proteinlevel_concept_id "NULL, Nomenclature for the sequence variant at the protein level (HGVS_P)"
   integer variant_read_depth "NULL, Variant depth divided by read depth"
   integer variant_exon_number "NULL, Exon number in which the variant occurred"
   float copy_number "NULL, Copy number value for CNV data"
@@ -174,24 +197,24 @@ variant_occurrence{
   integer fusion_supporting_reads "NULL, Supporting read count of the fusion"
   varchar(MAX) sequence_alteration "NULL, Structural variant type"
   varchar(MAX) variant_feature "NULL, Functional variant type"
-  varchar(50) genetic_origin "NULL, Somatic or germline origin or the variant"
-  varchar(50) genotype "NULL, Allele state"
+  integer genetic_origin_concept_id "NULL, Somatic or germline origin or the variant"
+  integer genotype_concept_id "NULL, Allele state"
 }
 
 %% note "variant_annotation table, FROM OMOP G-CDM"
 variant_annotation{
   integer variant_annotation_id PK "NOT NULL, A unique identifier for each variant annotation event"
   integer variant_occurrence_id FK "NOT NULL, A foreign key identifier to the variant_occurrence table for which the variant annotation is recorded"
-  varchar(MAX) annotation_field "NOT NULL, Categories or database name of annotation"
+  integer annotation_concept_id PK "NOT NULL, annotation concept: annotation_database name, variant_origin, variant_pathogeny, variant_class_level, variant_tier_level, allele_frequency, drug_concept_id, clinical_trial_information..."
   varchar(MAX) value_as_string "NULL, Annotation value as a data type of string"
-  float value_as_number "NULL, ANnotation value as a data type of number"
+  float value_as_number "NULL, Annotation value as a data type of number"
   %% varchar(MAX) annotation_database "NOT NULL, Categories or database name of annotation"
   %% varchar(MAX) variant_origin "NULL, Annotation value as a data type of string"
-  %% varchar(MAX) variant_pathogeny "NULL, ANnotation value as a data type of number"
-  %% varchar(MAX) variant_class_level "NULL, ANnotation value as a data type of number"
-  %% varchar(MAX) variant_tier_level "NULL, ANnotation value as a data type of number"
-  %% float allele_frequency "NULL, ANnotation value as a data type of number"
-  %% varchar(MAX) medication "NULL, ANnotation value as a data type of number"
+  %% varchar(MAX) variant_pathogeny "NULL, Annotation value as a data type of number"
+  %% varchar(MAX) variant_class_level "NULL, Annotation value as a data type of number"
+  %% varchar(MAX) variant_tier_level "NULL, Annotation value as a data type of number"
+  %% float allele_frequency "NULL, Annotation value as a data type of number"
+  %% varchar(MAX) medication "NULL, Annotation value as a data type of number"
   %% varchar(MAX) clinical_trial_information "NULL, Annotation value as a data type of number"
 }
 
@@ -202,7 +225,10 @@ person ||--o{ specimen : "person.person_id specimen.person_id"
 genomic_test ||--o{ care_site : "genomic_test.care_site_id care_site.care_site_id" 
 variant_occurrence ||--o{ procedure_occurrence : "variant_occurrence.procedure_occurrence_id procedure_occurrence.procedure_occurrence_id" 
 variant_occurrence ||--o{ specimen : "variant_occurrence.specimen_id specimen.specimen_id" 
-variant_occurrence ||--o{ specimen : "variant_occurrence.reference_specimen_id specimen.specimen_id" 
+variant_occurrence ||--o{ specimen : "variant_occurrence.reference_specimen_id specimen.specimen_id"
+concept_class ||--o{ concept : "concept_class.concept_class_id concept.concept_class_id"
+concept ||--o{ concept_class : "concept.concept_id concept_class.concept_class_concept_id"
+
 
 fact_relationship ||--o{ procedure_occurrence : "fact_relationship.fact_id_1 procedure_occurrence.procedure_occurrence_id"
 fact_relationship ||--o{ specimen : "fact_relationship.fact_id_2 specimen.specimen_id"
@@ -211,4 +237,18 @@ genomic_test ||--o{ target_gene : "genomic_test.genomic_test_id target_gene.geno
 target_gene ||--o{ variant_occurrence : "target_gene.target_gene_id variant_occurrence.target_gene1_id"
 target_gene ||--o{ variant_occurrence : "target_gene.target_gene_id variant_occurrence.target_gene2_id"
 variant_occurrence ||--o{ variant_annotation : "variant_occurrence.variant_occurrence_id variant_annotation.variant_occurrence_id"
+
+
+variant_annotation ||--o{ concept : "variant_annotation.annotation_concept_id concept.concept_id"
+variant_occurrence ||--o{ concept : "variant_occurrence.reference_sequence_concept_id concept.concept_id"
+variant_occurrence ||--o{ concept : "variant_occurrence.rs_concept_id concept.concept_id"
+variant_occurrence ||--o{ concept : "variant_occurrence.dnalevel_concept_id concept.concept_id"
+variant_occurrence ||--o{ concept : "variant_occurrence.proteinlevel_concept_id concept.concept_id"
+variant_occurrence ||--o{ concept : "variant_occurrence.genetic_origin_concept_id concept.concept_id"
+variant_occurrence ||--o{ concept : "variant_occurrence.genotype_concept_id concept.concept_id"
+target_gene ||--o{ concept : "target_gene.gene_concept_id concept.concept_id"
+genomic_test ||--o{ concept : "genomic_test.reference_genome_concept_id concept.concept_id"
+genomic_test ||--o{ concept : "genomic_test.read_type_concept_id concept.concept_id"
+genomic_test ||--o{ concept : "genomic_test.chromosome_coordinate_concept_id concept.concept_id"
+
 ```
