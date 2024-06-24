@@ -16,7 +16,7 @@ title: Genomic-CDM Specification for OMOP Common Data Model 5.4
 }}%%
 erDiagram
 
-note FROM OMOP CDM
+%% note "person table, FROM OMOP CDM"
 person {
   integer person_id PK "NOT NULL, person_id"
   integer gender_concept_id FK "NOT NULL, gender_concept_id"
@@ -38,7 +38,7 @@ person {
   integer ethnicity_source_concept_id FK "NULL, ethnicity_source_concept_id"
 }
 
-note FROM OMOP CDM
+%% note "care_site table, FROM OMOP CDM"
 care_site {
   integer care_site_id PK "NOT NULL, care_site_id"
   varchar(255) care_site_name "NULL, care_site_name"
@@ -48,7 +48,7 @@ care_site {
   varchar(50) place_of_service_source_value "NULL, place_of_service_source_value"
 }
 
-note FROM OMOP CDM
+%% note "fact_relationship table, FROM OMOP CDM"
 fact_relationship {
   integer domain_concept_id_1 "NOT NULL, domain_concept_id_1"
   integer fact_id_1 "NOT NULL, fact_id_1"
@@ -57,7 +57,7 @@ fact_relationship {
   integer relationship_concept_id "NOT NULL, relationship_concept_id"
 }
 
-note FROM OMOP CDM
+%% note "specimen table, FROM OMOP CDM"
 specimen {
   integer specimen_id PK "NOT NULL, specimen_id"
   integer person_id FK "NOT NULL, person_id"
@@ -76,7 +76,7 @@ specimen {
   varchar(50) disease_status_source_value "NULL, disease_status_source_value"
 }
 
-note FROM OMOP CDM
+%% note "procedure_occurrence table,FROM OMOP CDM"
 procedure_occurrence {
   integer procedure_occurrence_id PK "NOT NULL, procedure_occurrence_id"
   integer person_id FK "NOT NULL, person_id"
@@ -96,7 +96,7 @@ procedure_occurrence {
   varchar(50) modifier_source_value "NULL, modifier_source_value"
 }
 
-note FROM OMOP CDM
+%% note "condition_occurrence table, FROM OMOP CDM"
 condition_occurrence {
   integer condition_occurrence_id PK "NOT NULL, condition_occurrence_id"
   integer person_id FK "NOT NULL, person_id"
@@ -116,6 +116,7 @@ condition_occurrence {
   varchar(50) condition_status_source_value "NULL, condition_status_source_value"
 }
 
+%% note "genomic_test table, FROM OMOP G-CDM"
 genomic_test{
   integer genomic_test_id PK "NOT NULL, A unique identifier for each platform"
   integer care_site_id  FK "NOT NULL, A foreign key to the site of primary care in the care_site table, where the details of the care site are stored"
@@ -138,6 +139,7 @@ genomic_test{
   varchar(255) annotation_databases "NULL, Information about the database for annotation"
 }
 
+%% note "target_gene table, FROM OMOP G-CDM"
 target_gene{
   integer target_gene_id PK "NOT NULL, A system-generated unique identifier for each target region"
   integer genomic_test_id FK "NOT NULL, A foreign key identifier to the platform containing the target region. The details of that platform are stored in the Platform_info table"
@@ -148,6 +150,7 @@ target_gene{
   %%integer end_position "NOT NULL, end position"
 }
 
+%% note "variant_occurrence table, FROM OMOP G-CDM"
 variant_occurrence{
   integer variant_occurrence_id PK "NOT NULL, A unique identifier for each variant occurrence event"
   integer procedure_occurrence_id FK "NOT NULL, A foreign key identifier to the Procedure_occurrence table for the procedure used to obtain the specimen"
@@ -175,6 +178,7 @@ variant_occurrence{
   varchar(50) genotype "NULL, Allele state"
 }
 
+%% note "variant_annotation table, FROM OMOP G-CDM"
 variant_annotation{
   integer variant_annotation_id PK "NOT NULL, A unique identifier for each variant annotation event"
   integer variant_occurrence_id FK "NOT NULL, A foreign key identifier to the variant_occurrence table for which the variant annotation is recorded"

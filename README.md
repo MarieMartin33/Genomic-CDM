@@ -7,6 +7,8 @@ This is a prototype of the Genomic CDM that is on developing, so please use it f
 
 Current [G-CDM Entity-Relationship Diagram](omop-gcdm.md) is up to date with the original G-CDM wiki content and the OMOP CDM 5.4.
 
+Browse Git push history to retrieve older versions and check differences.
+
 **_Genomic-CDM (G-CDM) v2.0 Specifications_**
 
 # Contents
