@@ -11,7 +11,7 @@ Browse Git push history to retrieve older versions and check differences.
 
 See [FHIR Genomics](https://build.fhir.org/ig/HL7/genomics-reporting/sequencing.html) for consistent parallel modeling.
 
-**_Genomic-CDM (G-CDM) v2.0 Specifications_**
+**_Genomic-CDM (G-CDM) v3.0 Specifications_**
 
 # Contents
 
@@ -63,8 +63,8 @@ See [FHIR Genomics](https://build.fhir.org/ig/HL7/genomics-reporting/sequencing.
 | rs_concept_id                   | No       | integer  | dbSNP reference ID (rsID) maintained by NCBI                                                                                        |
 | reference_allele        | No       | varchar(255) | Reference allele sequence (e.g., A)                                                                                                 |
 | alternate_allele        | No       | varchar(255) | Variant allele sequence (e.g., C)                                                                                                   |
-| dnalevel_concept_id                  | No       | integer | Nomenclature for the sequence variant at the DNA level                                                                              |
-| proteinlevel_concept_id                  | No       | integer | Nomenclature for the sequence variant at the protein level                                                                          |
+| dnalevel_concept_id                  | No       | integer | Nomenclature for the sequence variant at the DNA level (HGVS_A)                                                                              |
+| proteinlevel_concept_id                  | No       | integer | Nomenclature for the sequence variant at the protein level  (HGVS_P)                                                                           |
 | variant_read_depth      | No       | integer      | Variant depth divided by read depth                                                                                                 |
 | variant_exon_number     | No       | integer      | Exon number in which the variant occurred                                                                                           |
 | copy_number             | No       | float        | Copy number value for CNV data                                                                                                      |
