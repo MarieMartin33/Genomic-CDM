@@ -160,10 +160,6 @@ genomic_test{
   varchar(255) annotation_databases "NULL, Information about the database for annotation"
 }
 
-reference_genome_concept_id
-read_type_concept_id
-chromosome_coordinate_concept_id
-
 %% note "target_gene table, FROM OMOP G-CDM"
 target_gene{
   integer target_gene_id PK "NOT NULL, A system-generated unique identifier for each target region"
